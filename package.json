@@ -1,7 +1,7 @@
 {
   "name": "vue2-mapboxgl-component",
   "description": "A Vue.js component for Mapbox GL",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "author": "Guillem Aldeguer Lima <guillem.aldeguer@gmail.com>",
   "private": true,
   "scripts": {
