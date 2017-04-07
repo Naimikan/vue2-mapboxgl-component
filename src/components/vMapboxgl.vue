@@ -23,6 +23,9 @@ const ZoomManager = require('../managers/Zoom.js');
 const StyleManager = require('../managers/Style.js');
 const BearingManager = require('../managers/Bearing.js');
 const PitchManager = require('../managers/Pitch.js');
+const MaxZoomManager = require('../managers/MaxZoom.js');
+const MinZoomManager = require('../managers/MinZoom.js');
+const MaxBoundsManager = require('../managers/MaxBounds.js');
 
 export default {
   props: {
@@ -86,6 +89,14 @@ export default {
       default () {
         return { value: 0 };
       }
+    },
+    glMaxZoom: {
+      type: Number,
+      default: 22
+    },
+    glMinZoom: {
+      type: Number,
+      default: 0
     }
   },
   methods: {
@@ -187,6 +198,12 @@ export default {
         PitchManager.updatePitch(this.mapInstance, newPitch);
       },
       deep: true
+    },
+    glMaxZoom (newMaxZoom) {
+      MaxZoomManager.updateMaxZoom(this.mapInstance, newMaxZoom);
+    },
+    glMinZoom (newMinZoom) {
+      MinZoomManager.updateMinZoom(this.mapInstance, newMinZoom);
     }
   },
   data () {
@@ -251,10 +268,13 @@ export default {
       initObject.center = newCenter ? newCenter : initObject.center;
 
       var mapboxGlMap = new mapboxgl.Map(initObject);
-      
+
       ControlsManager.updateControls(mapboxGlMap, self.glControls);
       BearingManager.updateBearing(mapboxGlMap, self.glBearing);
       PitchManager.updatePitch(mapboxGlMap, self.glPitch);
+      MaxBoundsManager.updateMaxBounds(mapboxGlMap, self.glMaxBounds);
+      MaxZoomManager.updateMaxZoom(mapboxGlMap, self.glMaxZoom);
+      MinZoomManager.updateMinZoom(mapboxGlMap, self.glMinZoom);
 
       mapboxGlMap.on('load', function (event) {
         var map = event.target;
