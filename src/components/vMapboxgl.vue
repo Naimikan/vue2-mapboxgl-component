@@ -1,5 +1,7 @@
 <template>
   <div class="vue-mapboxgl-map">
+    <input type="hidden" id="vue-mapboxgl-compile-popup" />
+
     <div class="vue-mapboxgl-map-loader">
       <div class="spinner">
         <div class="double-bounce"></div>
@@ -10,22 +12,24 @@
 </template>
 
 <script>
-let mapboxgl = require('mapbox-gl');
+let mapboxgl = require('mapbox-gl')
 
-const Utils = require('../utils/Utils.js');
-const EventHub = require('../utils/EventHub.js').eventHub;
-const Constants = require('../constants/Constants.js');
+const Utils = require('../utils/Utils.js')
+const EventHub = require('../utils/EventHub.js').eventHub
+const Constants = require('../constants/Constants.js')
 
 // Managers
-const CenterManager = require('../managers/Center.js');
-const ControlsManager = require('../managers/Controls.js');
-const ZoomManager = require('../managers/Zoom.js');
-const StyleManager = require('../managers/Style.js');
-const BearingManager = require('../managers/Bearing.js');
-const PitchManager = require('../managers/Pitch.js');
-const MaxZoomManager = require('../managers/MaxZoom.js');
-const MinZoomManager = require('../managers/MinZoom.js');
-const MaxBoundsManager = require('../managers/MaxBounds.js');
+const CenterManager = require('../managers/Center.js')
+const ControlsManager = require('../managers/Controls.js')
+const ZoomManager = require('../managers/Zoom.js')
+const StyleManager = require('../managers/Style.js')
+const BearingManager = require('../managers/Bearing.js')
+const PitchManager = require('../managers/Pitch.js')
+const MaxZoomManager = require('../managers/MaxZoom.js')
+const MinZoomManager = require('../managers/MinZoom.js')
+const MaxBoundsManager = require('../managers/MaxBounds.js')
+// const SourcesManager = require('../managers/Sources.js')
+const PopupsManager = require('../managers/Popup.js')
 
 export default {
   props: {
@@ -72,7 +76,7 @@ export default {
     glCenter: {
       type: [Object, Array],
       default () {
-        return [0, 0];
+        return [0, 0]
       }
     },
     glControls: [Object, Array],
@@ -87,7 +91,7 @@ export default {
     glZoom: {
       type: Object,
       default () {
-        return { value: 0 };
+        return { value: 0 }
       }
     },
     glMaxZoom: {
@@ -97,34 +101,30 @@ export default {
     glMinZoom: {
       type: Number,
       default: 0
+    },
+    glMaxBounds: {
+      type: Array
+    },
+    glPopups: {
+      type: Array
     }
   },
   methods: {
     updateWidth (width) {
-      if (isNaN(width)) {
-        this.$el.style.width = width;
-      } else {
-        this.$el.style.width = width + 'px';
-      }
+      if (isNaN(width)) this.$el.style.width = width
+      else this.$el.style.width = width + 'px'
 
-      if (this.mapInstance && this.mapInstance !== null) {
-        this.mapInstance.resize();
-      }
+      if (this.mapInstance && this.mapInstance !== null) this.mapInstance.resize()
     },
     updateHeight (height) {
-      if (isNaN(height)) {
-        this.$el.style.height = height;
-      } else {
-        this.$el.style.height = height + 'px';
-      }
+      if (isNaN(height)) this.$el.style.height = height
+      else this.$el.style.height = height + 'px'
 
-      if (this.mapInstance && this.mapInstance !== null) {
-        this.mapInstance.resize();
-      }
+      if (this.mapInstance && this.mapInstance !== null) this.mapInstance.resize()
     },
     updateLanguage (newLanguage) {
       if (newLanguage && newLanguage !== null && this.mapInstance && this.mapInstance !== null) {
-        this.mapInstance.setLayoutProperty('country-label-lg', 'text-field', '{name_' + newLanguage + '}');
+        this.mapInstance.setLayoutProperty('country-label-lg', 'text-field', '{name_' + newLanguage + '}')
       }
     },
     changeLoadingMap (newValue) {
@@ -134,76 +134,94 @@ export default {
         var child = children[0];
 
         if (child.className.indexOf('vue-mapboxgl-map-loader') !== -1) {
-          if (newValue) {
-            child.className += ' vue-mapboxgl-map-loading';
-          } else {
-            child.className = child.className.replace('vue-mapboxgl-map-loading', '');
-          }
+          if (newValue) child.className += ' vue-mapboxgl-map-loading'
+          else child.className = child.className.replace('vue-mapboxgl-map-loading', '')
         }
       }
     }
   },
   watch: {
-    height (newHeight) {
-      this.updateHeight(newHeight);
+    height: {
+      handler (newHeight) {
+        this.updateHeight(newHeight)
+      }
     },
-    width (newWidth) {
-      this.updateWidth(newWidth);
+    width: {
+      handler (newWidth) {
+        this.updateWidth(newWidth)
+      }
     },
-    language (newLanguage) {
-      this.updateLanguage(newLanguage);
+    language: {
+      handler (newLanguage) {
+        this.updateLanguage(newLanguage)
+      }
     },
-    showCollisionBoxes: function (newShow) {
-      this.mapInstance.showCollisionBoxes = newShow;
+    showCollisionBoxes: {
+      handler (newShow) {
+        this.mapInstance.showCollisionBoxes = newShow
+      }
     },
-    showTileBoundaries: function (newShow) {
-      this.mapInstance.showTileBoundaries = newShow;
+    showTileBoundaries: {
+      handler (newShow) {
+        this.mapInstance.showTileBoundaries = newShow
+      }
     },
-    repaint: function (newRepaint) {
-      this.mapInstance.repaint = newRepaint;
+    repaint: {
+      handler (newRepaint) {
+        this.mapInstance.repaint = newRepaint
+      }
     },
 
     glBearing: {
       handler (newBearing) {
-        BearingManager.updateBearing(this.mapInstance, newBearing);
+        BearingManager.updateBearing(this.mapInstance, newBearing)
       },
       deep: true
     },
     glCenter: {
       handler (newCenter, oldCenter) {
-        CenterManager.updateCenter(this.mapInstance, newCenter, oldCenter);
+        CenterManager.updateCenter(this.mapInstance, newCenter, oldCenter)
       },
       deep: true
     },
     glControls: {
       handler (newControls) {
-        ControlsManager.updateControls(this.mapInstance, newControls);
+        ControlsManager.updateControls(this.mapInstance, newControls)
       },
       deep: true
     },
     glZoom: {
       handler (newZoom) {
-        ZoomManager.updateZoom(this.mapInstance, newZoom);
+        ZoomManager.updateZoom(this.mapInstance, newZoom)
       },
       deep: true
     },
     glStyle: {
       handler (newStyle, oldStyle) {
-        StyleManager.updateStyle(this.mapInstance, newStyle, oldStyle);
+        StyleManager.updateStyle(this.mapInstance, newStyle, oldStyle)
       },
       deep: true
     },
     glPitch: {
       handler (newPitch) {
-        PitchManager.updatePitch(this.mapInstance, newPitch);
+        PitchManager.updatePitch(this.mapInstance, newPitch)
       },
       deep: true
     },
-    glMaxZoom (newMaxZoom) {
-      MaxZoomManager.updateMaxZoom(this.mapInstance, newMaxZoom);
+    glMaxZoom: {
+      handler (newMaxZoom) {
+        MaxZoomManager.updateMaxZoom(this.mapInstance, newMaxZoom)
+      }
     },
-    glMinZoom (newMinZoom) {
-      MinZoomManager.updateMinZoom(this.mapInstance, newMinZoom);
+    glMinZoom: {
+      handler (newMinZoom) {
+        MinZoomManager.updateMinZoom(this.mapInstance, newMinZoom)
+      }
+    },
+    glMaxBounds: {
+      handler (newMaxBounds) {
+        MaxBoundsManager.updateMaxBounds(this.mapInstance, newMaxBounds)
+      }
     }
   },
   data () {
@@ -212,43 +230,33 @@ export default {
     }
   },
   beforeCreate () {
-    if (!mapboxgl) {
-      throw new Error('Mapbox GL doesn\'t included');
-    }
+    if (!mapboxgl) throw new Error('Mapbox GL doesn\'t included')
 
-    if (!mapboxgl.supported()) {
-      throw new Error('Your browser doesn\'t support Mapbox GL');
-    }
+    if (!mapboxgl.supported()) throw new Error('Your browser doesn\'t support Mapbox GL')
   },
   created () {
-    var self = this;
+    var self = this
 
     if (!mapboxgl.accessToken) {
-      if (self.accessToken && self.accessToken.length > 0) {
-        mapboxgl.accessToken = self.accessToken;
-      } else {
-        throw new Error('Mapbox access token doesn\'t defined');
-      }
+      if (self.accessToken && self.accessToken.length > 0) mapboxgl.accessToken = self.accessToken
+      else throw new Error('Mapbox access token doesn\'t defined')
     }
 
     if (self.rtlEnabled && typeof(self.rtlEnabled) === 'boolean') {
-      if (mapboxgl.setRTLTextPlugin) {
-        mapboxgl.setRTLTextPlugin(Constants.rtlPluginUrl);
-      } else {
-        throw new Error('Your version of Mapbox GL doesn\'t support "setRTLTextPlugin" function');
-      }
+      if (mapboxgl.setRTLTextPlugin) mapboxgl.setRTLTextPlugin(Constants.rtlPluginUrl)
+      else throw new Error('Your version of Mapbox GL doesn\'t support "setRTLTextPlugin" function')
     }
   },
   mounted () {
-    var self = this;
+    var self = this
 
-    self.changeLoadingMap(true);
+    self.changeLoadingMap(true)
 
-    var mapboxglMapId = self.id ? self.id : 'vue-map-' + Utils.generateGUID();
-    self.$el.setAttribute('id', mapboxglMapId);
+    var mapboxglMapId = self.id ? self.id : 'vue-map-' + Utils.generateGUID()
+    self.$el.setAttribute('id', mapboxglMapId)
 
-    self.updateHeight(self.height);
-    self.updateWidth(self.width);
+    self.updateHeight(self.height)
+    self.updateWidth(self.width)
 
     var initObject = {
       container: mapboxglMapId,
@@ -262,32 +270,31 @@ export default {
       trackResize: self.trackResize,
       renderWorldCopies: self.renderWorldCopies,
       attributionControl: false
-    };
+    }
 
-    CenterManager.validateAndFormatCenter(self.glCenter).then(function (newCenter) {
-      initObject.center = newCenter ? newCenter : initObject.center;
+    CenterManager.validateAndFormatCenter(self.glCenter).then(newCenter => {
+      initObject.center = newCenter ? newCenter : initObject.center
 
-      var mapboxGlMap = new mapboxgl.Map(initObject);
+      var mapboxGlMap = new mapboxgl.Map(initObject)
 
-      ControlsManager.updateControls(mapboxGlMap, self.glControls);
-      BearingManager.updateBearing(mapboxGlMap, self.glBearing);
-      PitchManager.updatePitch(mapboxGlMap, self.glPitch);
-      MaxBoundsManager.updateMaxBounds(mapboxGlMap, self.glMaxBounds);
-      MaxZoomManager.updateMaxZoom(mapboxGlMap, self.glMaxZoom);
-      MinZoomManager.updateMinZoom(mapboxGlMap, self.glMinZoom);
+      ControlsManager.updateControls(mapboxGlMap, self.glControls)
+      BearingManager.updateBearing(mapboxGlMap, self.glBearing)
+      PitchManager.updatePitch(mapboxGlMap, self.glPitch)
+      MaxBoundsManager.updateMaxBounds(mapboxGlMap, self.glMaxBounds)
+      MaxZoomManager.updateMaxZoom(mapboxGlMap, self.glMaxZoom)
+      MinZoomManager.updateMinZoom(mapboxGlMap, self.glMinZoom)
+      PopupsManager.updatePopups(mapboxGlMap, self.glPopups)
 
-      mapboxGlMap.on('load', function (event) {
-        var map = event.target;
+      mapboxGlMap.on('load', event => {
+        var map = event.target
 
-        self.mapInstance = map;
-        self.changeLoadingMap(false);
-      });
-    });
+        self.mapInstance = map
+        self.changeLoadingMap(false)
+      })
+    })
   },
   beforeDestroy () {
-    if (this.mapInstance) {
-      this.mapInstance.remove();
-    }
+    if (this.mapInstance) this.mapInstance.remove()
   }
 }
 </script>

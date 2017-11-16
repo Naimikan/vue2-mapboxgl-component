@@ -1,5 +1,5 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
-let hub = new Vue();
+let hub = new Vue()
 
-export let eventHub = hub;
+export let eventHub = hub
