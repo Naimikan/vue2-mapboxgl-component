@@ -2,7 +2,7 @@
   <a href="https://www.npmjs.com/package/vue2-mapboxgl-component">
     <img src="https://img.shields.io/npm/v/vue2-mapboxgl-component.svg" alt="version" />
   </a>
-  <a href="LICENSE">
+  <a href="LICENSE.md">
     <img src="https://img.shields.io/npm/l/vue2-mapboxgl-component.svg" alt="license" />
   </a>
 </p>
