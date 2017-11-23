@@ -6,7 +6,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build.js'
+    filename: 'vue2-mapboxgl-component.min.js',
+    library: 'vMapboxgl',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   module: {
     rules: [

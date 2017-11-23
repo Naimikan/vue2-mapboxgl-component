@@ -1,13 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>vue2-mapboxgl-component</title>
+    <title>VueJS component for Mapbox GL</title>
 
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="https://api.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css" rel="stylesheet" />
+
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <script src="/dist/build.js"></script>
+    <div id="app">
+      <v-mapboxgl
+        :id="mapId"
+        :access-token="mapAccessToken"
+        :height="mapHeight"
+        :width="mapWidth"
+        :gl-center="mapCenter"
+        :gl-controls="mapControls"
+        :gl-zoom="mapZoom"
+        :gl-style="mapStyle"
+        :gl-bearing="mapBearing"
+        :gl-pitch="mapPitch"
+        :gl-popups="mapPopups">
+      </v-mapboxgl>
+    </div>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="./dist/vue2-mapboxgl-component.min.js"></script>
+
+    <script>
+      Vue.config.debug = true
+
+      new Vue({
+        el: '#app',
+        components: {
+          vMapboxgl: vMapboxgl
+        },
+        data () {
+          return {
+            mapId: 'map',
+            mapAccessToken: 'pk.eyJ1IjoibmFpbWlrYW4iLCJhIjoiY2lraXJkOXFjMDA0OXdhbTYzNTE0b2NtbiJ9.O64XgZQHNHcV2gwNLN2a0Q',
+            mapHeight: window.innerHeight,
+            mapWidth: window.innerWidth,
+            mapCenter: {
+              autodiscover: true
+            },
+            mapControls: {
+              navigation: {
+                enabled: true,
+                options: {}
+              }
+            },
+            mapZoom: {
+              value: 8
+            },
+            mapStyle: 'mapbox://styles/mapbox/streets-v9',
+            mapBearing: {
+              value: 40
+            },
+            mapPitch: {
+              value: 60
+            },
+            mapPopups: [
+              {
+                coordinates: [-2, 41],
+                message: 'Hi popup!'
+                // message: '<h3>Title</h3><v-mapboxgl :access-token="\'pk.eyJ1IjoibmFpbWlrYW4iLCJhIjoiY2lraXJkOXFjMDA0OXdhbTYzNTE0b2NtbiJ9.O64XgZQHNHcV2gwNLN2a0Q\'" :width="150" :height="150"></v-mapboxgl>'
+              }
+            ]
+          }
+        },
+        methods: {
+          handleResize (event) {
+            this.mapHeight = event.currentTarget.innerHeight
+            this.mapWidth = event.currentTarget.innerWidth
+          }
+        },
+        mounted () {
+          window.addEventListener('resize', this.handleResize)
+        }
+      })
+    </script>
   </body>
 </html>

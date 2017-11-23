@@ -1,17 +1,62 @@
-# vue2-mapboxgl-component
+<p align="right">
+  <a href="https://www.npmjs.com/package/vue2-mapboxgl-component">
+    <img src="https://img.shields.io/npm/v/vue2-mapboxgl-component.svg" alt="version" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/npm/l/vue2-mapboxgl-component.svg" alt="license" />
+  </a>
+</p>
 
-> A Vue.js component for Mapbox GL
+<h1 align="center">vue2-mapboxgl-component | <a href="https://github.com/Naimikan/vue2-mapboxgl-component/wiki">Wiki</a></h1>
 
-## Build Setup
+<h5 align="center">VueJS component for Mapbox GL</h5>
 
-``` bash
-# install dependencies
+<h2 align="center">Installation</h2>
+
+NPM
+```BASH
+npm install vue2-mapboxgl-component --save
+```
+
+<h2 align="center">Usage</h2>
+
+```html
+<template>
+  <v-mapboxgl :access-token="accessToken"></v-mapboxgl>
+</template>
+
+<script>
+  import vMapboxgl from 'vue2-mapboxgl-component'
+
+  export default {
+    data () {
+      return {
+        accessToken: '<YOUR_ACCESS_TOKEN>'
+      }
+    },
+
+    components: {
+      vMapboxgl
+    }
+  }
+</script>
+```
+
+<h2 align="center">Developing</h2>
+
+Install dependencies, build the source files and preview
+
+```bash
+# Clone repo
+git clone https://github.com/Naimikan/vue2-mapboxgl-component.git
+
+# Install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# Serve with hot reload at localhost:8080
 npm run dev
 
-# build for production with minification
+# Build for production with minification
 npm run build
 ```
 

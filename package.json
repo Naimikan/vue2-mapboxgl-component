@@ -1,12 +1,32 @@
 {
   "name": "vue2-mapboxgl-component",
+  "version": "0.2.0",
   "description": "A Vue.js component for Mapbox GL",
-  "version": "0.1.0",
-  "author": "Guillem Aldeguer Lima <guillem.aldeguer@gmail.com>",
+  "main": "dist/vue2-mapboxgl-component.min.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naimikan/vue2-mapboxgl-component.git"
+  },
+  "keywords": [
+    "webgl",
+    "vuejs",
+    "vue2",
+    "mapbox",
+    "mapboxgl",
+    "javascript",
+    "component",
+    "cli"
+  ],
+  "author": "https://github.com/Naimikan/vue2-mapboxgl-component/graphs/contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Naimikan/vue2-mapboxgl-component/issues"
+  },
+  "homepage": "",
   "dependencies": {
     "mapbox-gl": ">=0.23.0",
     "vue": ">=2.2.1"
